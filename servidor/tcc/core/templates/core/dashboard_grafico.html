@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Monitoramento</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .grafico-container { width: 600px; margin: 20px auto; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard de Monitoramento</h1>
+
+    <div class="grafico-container">
+        <h2>Temperatura</h2>
+        <canvas id="graficoTemperatura"></canvas>
+    </div>
+
+    <div class="grafico-container">
+        <h2>pH</h2>
+        <canvas id="graficoPh"></canvas>
+    </div>
+
+    <script>
+        // Dados passados da view
+        const horarios = {{ horarios|safe }};
+        const temperaturas = {{ temperaturas|safe }};
+        const phs = {{ phs|safe }};
+
+        // Gráfico de Temperatura
+        new Chart(document.getElementById("graficoTemperatura"), {
+            type: "line",
+            data: {
+                labels: horarios,
+                datasets: [{
+                    label: "Temperatura (°C)",
+                    data: temperaturas,
+                    borderColor: "red",
+                    fill: false
+                }]
+            }
+        });
+
+        // Gráfico de pH
+        new Chart(document.getElementById("graficoPh"), {
+            type: "line",
+            data: {
+                labels: horarios,
+                datasets: [{
+                    label: "pH da Água",
+                    data: phs,
+                    borderColor: "blue",
+                    fill: false
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

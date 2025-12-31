@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Gráficos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif; }
+        .hero {
+            background: radial-gradient(600px circle at 20% 20%, rgba(6, 182, 212, 0.14), transparent 45%),
+                        linear-gradient(120deg, #020617 0%, #0b1224 50%, #0f172a 100%);
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900 text-slate-50">
+    <header class="hero text-slate-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <div class="text-xs uppercase tracking-[0.2em] text-slate-300">Monitoramento</div>
+                <h1 class="text-2xl font-semibold">Visualização de Gráficos</h1>
+                <p class="text-slate-300 text-sm">Comparativos de temperatura, pH e condutividade.</p>
+            </div>
+            <nav class="flex items-center gap-3 text-sm">
+                <a class="px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700 hover:border-cyan-400 transition" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-700 hover:border-cyan-400 transition" href="{% url 'historico' %}">Histórico</a>
+                <a class="px-3 py-2 rounded-lg bg-cyan-500 text-slate-900 font-semibold shadow-md hover:-translate-y-0.5 transition" href="{% url 'logout' %}">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+        <section class="bg-slate-800/70 border border-slate-700 rounded-2xl p-4 shadow-xl flex flex-wrap items-end gap-4">
+            <div>
+                <div class="text-sm text-slate-300 font-semibold">Filtrar por período</div>
+                <p class="text-xs text-slate-400">Aplique datas para limitar as séries exibidas nos gráficos.</p>
+            </div>
+            <form method="get" class="flex flex-wrap items-end gap-3">
+                <label class="text-sm text-slate-300 space-y-1">
+                    <span>Início</span>
+                    <input type="date" name="inicio" value="{{ inicio }}" class="bg-slate-900 border border-slate-700 text-slate-100 px-3 py-2 rounded-lg focus:border-cyan-400 focus:outline-none">
+                </label>
+                <label class="text-sm text-slate-300 space-y-1">
+                    <span>Fim</span>
+                    <input type="date" name="fim" value="{{ fim }}" class="bg-slate-900 border border-slate-700 text-slate-100 px-3 py-2 rounded-lg focus:border-cyan-400 focus:outline-none">
+                </label>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-cyan-500 text-slate-900 font-semibold shadow-md hover:-translate-y-0.5 transition">Aplicar</button>
+                <a href="{% url 'dashboard_grafico' %}" class="px-3 py-2 rounded-lg border border-slate-700 text-slate-200 hover:border-cyan-400 transition">Limpar</a>
+            </form>
+        </section>
+
+        <div class="grid gap-6 sm:grid-cols-2">
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">Temperatura (Linha)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoLinhaTemperatura')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoLinhaTemperatura"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">pH (Linha)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoLinhaPh')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoLinhaPh"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">Temperatura (Barras)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoBarrasTemperatura')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoBarrasTemperatura"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">pH (Barras)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoBarrasPh')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoBarrasPh"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">Temperatura (Bolhas)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoBolhasTemperatura')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoBolhasTemperatura"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">pH (Bolhas)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoBolhasPh')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoBolhasPh"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl sm:col-span-2">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">Temperatura (Dispersão)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoDispersaoTemperatura')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoDispersaoTemperatura"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl sm:col-span-2">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">pH (Dispersão)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoDispersaoPh')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoDispersaoPh"></canvas>
+            </div>
+            <div class="card p-4 rounded-2xl sm:col-span-2">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold text-slate-100">Temperatura x pH (Combinado)</h2>
+                    <button class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition" onclick="exportarGrafico('graficoCombinado')">Exportar PNG</button>
+                </div>
+                <canvas id="graficoCombinado"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const horarios = {{ horarios|safe }};
+        const temperaturas = {{ temperaturas|safe }};
+        const phs = {{ phs|safe }};
+
+        function gerarBolhas(labels, dados) {
+            return dados.map((valor, i) => ({
+                x: i,
+                y: valor,
+                r: Math.max(3, Math.min(10, valor / 2))
+            }));
+        }
+
+        function baseConfig(titulo) {
+            return {
+                plugins: {
+                    legend: { position: "top" },
+                    title: { display: false, text: titulo }
+                }
+            };
+        }
+
+        new Chart(document.getElementById("graficoLinhaTemperatura"), {
+            type: "line",
+            data: { labels: horarios, datasets: [{ label: "Temperatura (°C)", data: temperaturas, borderColor: "#f97316", backgroundColor: "rgba(249, 115, 22, 0.2)", fill: true, tension: 0.2 }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoLinhaPh"), {
+            type: "line",
+            data: { labels: horarios, datasets: [{ label: "pH", data: phs, borderColor: "#38bdf8", backgroundColor: "rgba(56, 189, 248, 0.2)", fill: true, tension: 0.2 }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoBarrasTemperatura"), {
+            type: "bar",
+            data: { labels: horarios, datasets: [{ label: "Temperatura (°C)", data: temperaturas, backgroundColor: "rgba(249, 115, 22, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoBarrasPh"), {
+            type: "bar",
+            data: { labels: horarios, datasets: [{ label: "pH", data: phs, backgroundColor: "rgba(56, 189, 248, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoBolhasTemperatura"), {
+            type: "bubble",
+            data: { datasets: [{ label: "Temperatura (°C)", data: gerarBolhas(horarios, temperaturas), backgroundColor: "rgba(249, 115, 22, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoBolhasPh"), {
+            type: "bubble",
+            data: { datasets: [{ label: "pH", data: gerarBolhas(horarios, phs), backgroundColor: "rgba(56, 189, 248, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        const dadosDispersaoTemp = temperaturas.map((t, i) => ({x: i, y: t}));
+        new Chart(document.getElementById("graficoDispersaoTemperatura"), {
+            type: "scatter",
+            data: { datasets: [{ label: "Temperatura (°C)", data: dadosDispersaoTemp, backgroundColor: "rgba(249, 115, 22, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        const dadosDispersaoPh = phs.map((p, i) => ({x: i, y: p}));
+        new Chart(document.getElementById("graficoDispersaoPh"), {
+            type: "scatter",
+            data: { datasets: [{ label: "pH", data: dadosDispersaoPh, backgroundColor: "rgba(56, 189, 248, 0.7)" }] },
+            options: baseConfig()
+        });
+
+        new Chart(document.getElementById("graficoCombinado"), {
+            type: "line",
+            data: {
+                labels: horarios,
+                datasets: [
+                    { label: "Temperatura (°C)", data: temperaturas, borderColor: "rgba(249, 115, 22, 0.8)", backgroundColor: "rgba(249, 115, 22, 0.2)", yAxisID: "y1", tension: 0.2, pointRadius: 0, borderWidth: 2, fill: false },
+                    { label: "pH", data: phs, borderColor: "rgba(56, 189, 248, 0.9)", backgroundColor: "rgba(56, 189, 248, 0.2)", yAxisID: "y2", tension: 0.2, pointRadius: 0, borderWidth: 2, fill: false }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: "index", intersect: false },
+                plugins: { legend: { position: "top" } },
+                scales: {
+                    y1: { type: "linear", display: true, position: "left", grid: { drawOnChartArea: false }, title: { display: true, text: "Temperatura (°C)" } },
+                    y2: { type: "linear", display: true, position: "right", grid: { drawOnChartArea: false }, title: { display: true, text: "pH" } },
+                    x: { display: true, title: { display: true, text: "Horários" }, ticks: { maxTicksLimit: 15 } }
+                }
+            }
+        });
+
+        function exportarGrafico(idCanvas) {
+            const canvas = document.getElementById(idCanvas);
+            const link = document.createElement("a");
+            link.download = idCanvas + ".png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+    </script>
+</body>
+</html>
