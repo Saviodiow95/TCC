@@ -1,0 +1,141 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 14px; }
+    .board { fill: #f0f4ff; stroke: #3b5cad; stroke-width: 2; }
+    .module { fill: #f7f7f7; stroke: #333; stroke-width: 1.5; }
+    .bus { stroke: #888; stroke-width: 2; stroke-dasharray: 6 4; }
+    .wire { stroke: #c0392b; stroke-width: 2.5; }
+    .wire2 { stroke: #27ae60; stroke-width: 2.5; }
+    .wire3 { stroke: #2980b9; stroke-width: 2.5; }
+    .gnd { stroke: #555; stroke-width: 2.5; }
+    .pwr { stroke: #f39c12; stroke-width: 2.5; }
+  </style>
+
+  <!-- Arduino UNO R4 WiFi -->
+  <rect class='board' x='480' y='180' width='240' height='420' rx='12' />
+  <text x='600' y='210' text-anchor='middle' font-size='16' font-weight='bold'>Arduino UNO R4 WiFi</text>
+  <!-- Pin labels -->
+  <text x='500' y='250'>D2 (DS18B20)</text>
+  <text x='500' y='280'>D3 (Trig AJ-SR04M)</text>
+  <text x='500' y='310'>D4 (Echo AJ-SR04M)</text>
+  <text x='500' y='340'>D5 (Relé motor)</text>
+  <text x='500' y='370'>D10 (CS SD)</text>
+  <text x='500' y='400'>D11 (MOSI)</text>
+  <text x='500' y='430'>D12 (MISO)</text>
+  <text x='500' y='460'>D13 (SCK)</text>
+  <text x='500' y='490'>A0 (pH 4502C)</text>
+  <text x='500' y='520'>A1 (TDS V1.0)</text>
+  <text x='500' y='550'>A4 (SDA LCD/RTC)</text>
+  <text x='500' y='580'>A5 (SCL LCD/RTC)</text>
+  <text x='620' y='520'>5V</text>
+  <text x='620' y='550'>GND</text>
+
+  <!-- Modules -->
+  <rect class='module' x='140' y='120' width='180' height='80' rx='8'/>
+  <text x='230' y='165' text-anchor='middle'>DS18B20</text>
+  <text x='230' y='185' text-anchor='middle'>D2 + 4.7kO pull-up</text>
+
+  <rect class='module' x='120' y='240' width='200' height='80' rx='8'/>
+  <text x='220' y='285' text-anchor='middle'>AJ-SR04M</text>
+  <text x='220' y='305' text-anchor='middle'>Trig D3 / Echo D4</text>
+
+  <rect class='module' x='120' y='360' width='200' height='80' rx='8'/>
+  <text x='220' y='405' text-anchor='middle'>Relé Motor</text>
+  <text x='220' y='425' text-anchor='middle'>IN D5 (ativo HIGH)</text>
+
+  <rect class='module' x='120' y='480' width='200' height='80' rx='8'/>
+  <text x='220' y='525' text-anchor='middle'>pH 4502C</text>
+  <text x='220' y='545' text-anchor='middle'>Saída A0</text>
+
+  <rect class='module' x='120' y='600' width='200' height='80' rx='8'/>
+  <text x='220' y='645' text-anchor='middle'>TDS V1.0</text>
+  <text x='220' y='665' text-anchor='middle'>Saída A1</text>
+
+  <rect class='module' x='820' y='200' width='220' height='90' rx='8'/>
+  <text x='930' y='240' text-anchor='middle'>LCD 16x2 I2C</text>
+  <text x='930' y='260' text-anchor='middle'>Endereço 0x3F</text>
+
+  <rect class='module' x='820' y='320' width='220' height='90' rx='8'/>
+  <text x='930' y='360' text-anchor='middle'>RTC DS1307</text>
+  <text x='930' y='380' text-anchor='middle'>I2C 0x68</text>
+
+  <rect class='module' x='820' y='440' width='220' height='120' rx='8'/>
+  <text x='930' y='480' text-anchor='middle'>SD Card (SPI)</text>
+  <text x='930' y='500' text-anchor='middle'>CS D10, MOSI D11</text>
+  <text x='930' y='520' text-anchor='middle'>MISO D12, SCK D13</text>
+
+  <!-- Wires -->
+  <!-- DS18B20 -->
+  <line class='wire' x1='320' y1='160' x2='480' y2='250'/>
+  <text x='360' y='200'>D2</text>
+  <line class='pwr' x1='320' y1='150' x2='620' y2='520'/>
+  <text x='330' y='140'>5V</text>
+  <line class='gnd' x1='320' y1='170' x2='620' y2='550'/>
+  <text x='330' y='180'>GND</text>
+  <line class='wire2' x1='320' y1='180' x2='350' y2='180'/>
+  <line class='pwr' x1='350' y1='180' x2='350' y2='150'/>
+  <text x='360' y='170'>4.7kO</text>
+
+  <!-- AJ-SR04M -->
+  <line class='wire' x1='320' y1='280' x2='480' y2='280'/>
+  <text x='340' y='270'>Trig D3</text>
+  <line class='wire2' x1='320' y1='300' x2='480' y2='310'/>
+  <text x='340' y='320'>Echo D4</text>
+  <line class='pwr' x1='320' y1='260' x2='620' y2='520'/>
+  <line class='gnd' x1='320' y1='320' x2='620' y2='550'/>
+
+  <!-- Relé -->
+  <line class='wire' x1='320' y1='400' x2='480' y2='340'/>
+  <text x='340' y='390'>IN D5</text>
+  <line class='pwr' x1='320' y1='380' x2='620' y2='520'/>
+  <line class='gnd' x1='320' y1='420' x2='620' y2='550'/>
+
+  <!-- pH -->
+  <line class='wire3' x1='320' y1='520' x2='480' y2='490'/>
+  <text x='340' y='510'>A0</text>
+  <line class='pwr' x1='320' y1='500' x2='620' y2='520'/>
+  <line class='gnd' x1='320' y1='540' x2='620' y2='550'/>
+
+  <!-- TDS -->
+  <line class='wire3' x1='320' y1='640' x2='480' y2='520'/>
+  <text x='340' y='630'>A1</text>
+  <line class='pwr' x1='320' y1='620' x2='620' y2='520'/>
+  <line class='gnd' x1='320' y1='660' x2='620' y2='550'/>
+
+  <!-- LCD I2C -->
+  <line class='bus' x1='820' y1='230' x2='480' y2='550'/>
+  <text x='700' y='240'>SDA A4</text>
+  <line class='bus' x1='820' y1='250' x2='480' y2='580'/>
+  <text x='700' y='270'>SCL A5</text>
+  <line class='pwr' x1='820' y1='210' x2='620' y2='520'/>
+  <line class='gnd' x1='820' y1='270' x2='620' y2='550'/>
+
+  <!-- RTC I2C -->
+  <line class='bus' x1='820' y1='350' x2='480' y2='550'/>
+  <text x='700' y='330'>SDA A4</text>
+  <line class='bus' x1='820' y1='370' x2='480' y2='580'/>
+  <text x='700' y='380'>SCL A5</text>
+  <line class='pwr' x1='820' y1='330' x2='620' y2='520'/>
+  <line class='gnd' x1='820' y1='390' x2='620' y2='550'/>
+
+  <!-- SD SPI -->
+  <line class='wire' x1='820' y1='480' x2='480' y2='370'/>
+  <text x='700' y='470'>CS D10</text>
+  <line class='wire' x1='820' y1='500' x2='480' y2='400'/>
+  <text x='700' y='500'>MOSI D11</text>
+  <line class='wire2' x1='820' y1='520' x2='480' y2='430'/>
+  <text x='700' y='530'>MISO D12</text>
+  <line class='wire3' x1='820' y1='540' x2='480' y2='460'/>
+  <text x='700' y='560'>SCK D13</text>
+  <line class='pwr' x1='820' y1='460' x2='620' y2='520'/>
+  <line class='gnd' x1='820' y1='560' x2='620' y2='550'/>
+
+  <!-- Legend -->
+  <rect x='40' y='40' width='210' height='120' fill='white' stroke='#333' stroke-width='1'/>
+  <text x='60' y='70'>Legend:</text>
+  <line class='wire' x1='60' y1='90' x2='100' y2='90'/><text x='110' y='94'>Digital</text>
+  <line class='wire3' x1='60' y1='110' x2='100' y2='110'/><text x='110' y='114'>Analógico</text>
+  <line class='bus' x1='60' y1='130' x2='100' y2='130'/><text x='110' y='134'>I2C/SPI</text>
+  <line class='pwr' x1='140' y1='90' x2='180' y2='90'/><text x='190' y='94'>5V</text>
+  <line class='gnd' x1='140' y1='110' x2='180' y2='110'/><text x='190' y='114'>GND</text>
+</svg>
